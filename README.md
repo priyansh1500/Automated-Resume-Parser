@@ -144,4 +144,5 @@ Open your browser and visit:
 
 **Priyansh Khunt**  
 BSc Artificial Intelligence and Data Science Student
+
 Automated Resume Parser — Internship Project 2026
