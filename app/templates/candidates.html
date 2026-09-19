@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidates Dashboard — Automated Resume Parser</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="container container-wide">
+
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="nav-brand">📄 Resume Parser</div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">📤 Upload Resume</a>
+                <a href="/candidates" class="nav-link active">👥 Candidates Dashboard</a>
+            </div>
+        </nav>
+
+        <!-- Header -->
+        <header class="header">
+            <h1>👥 Candidate Dashboard</h1>
+            <p class="subtitle">All parsed candidate resumes stored in PostgreSQL</p>
+        </header>
+
+        <!-- Flash Messages (deletion success / error notifications) -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">
+                            {% if category == 'error' %}⚠️{% else %}✅{% endif %}
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Dashboard Main Card -->
+        <main class="card">
+
+            <div class="dashboard-header">
+                <h2>Parsed Candidates ({{ candidates|length }})</h2>
+                <a href="/" class="btn-upload-small">+ Upload New Resume</a>
+            </div>
+
+            {% if not candidates %}
+                <!-- Empty state when no candidates are stored -->
+                <div class="empty-state">
+                    <div class="empty-icon">📂</div>
+                    <h3>No Candidates Found</h3>
+                    <p>No resume profiles have been saved in the database yet.</p>
+                    <a href="/" class="btn-primary">Upload Your First Resume</a>
+                </div>
+            {% else %}
+                <!-- Candidate List Grid -->
+                <div class="candidate-grid">
+                    {% for candidate in candidates %}
+                        <div class="candidate-card">
+                            <div class="candidate-card-header">
+                                <div class="candidate-card-avatar">👤</div>
+                                <div class="candidate-card-title">
+                                    <h3>{{ candidate.name or 'Unnamed Candidate' }}</h3>
+                                    <span class="candidate-id-badge">ID: #{{ candidate.id }}</span>
+                                </div>
+                            </div>
+
+                            <div class="candidate-card-details">
+                                <p>📧 <strong>Email:</strong> {{ candidate.email or 'N/A' }}</p>
+                                <p>📞 <strong>Phone:</strong> {{ candidate.phone or 'N/A' }}</p>
+                                <p class="card-date">🕒 <strong>Parsed:</strong> {{ candidate.created_at.strftime('%b %d, %Y at %H:%M') if candidate.created_at else 'N/A' }}</p>
+                            </div>
+
+                            <!-- Top Skills Preview -->
+                            {% if candidate.skills %}
+                                <div class="card-skills-preview">
+                                    {% for skill in candidate.skills[:5] %}
+                                        <span class="skill-badge-small">{{ skill }}</span>
+                                    {% endfor %}
+                                    {% if candidate.skills|length > 5 %}
+                                        <span class="skill-more">+{{ candidate.skills|length - 5 }} more</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+
+                            <!-- Card Action Buttons (View & Delete) -->
+                            <div class="candidate-card-footer">
+                                <a href="{{ url_for('main.view_candidate', candidate_id=candidate.id) }}" class="btn-view-profile">
+                                    View Profile →
+                                </a>
+
+                                <!-- Delete Candidate Form -->
+                                <form action="{{ url_for('main.delete_candidate', candidate_id=candidate.id) }}" method="POST" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this candidate? This will permanently delete the candidate record and uploaded resume.');">
+                                    <button type="submit" class="btn-delete">
+                                        🗑️ Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Automated Resume Parser &mdash; Internship Project 2026</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

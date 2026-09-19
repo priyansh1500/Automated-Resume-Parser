@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parsed Resume Profile — Automated Resume Parser</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="container container-wide">
+
+        <!-- Header -->
+        <header class="header">
+            <h1>📄 Automated Resume Parser</h1>
+            <p class="subtitle">AI & NLP Parsed Resume Profile</p>
+        </header>
+
+        <!-- Results Main Card -->
+        <main class="card">
+
+            <!-- File info bar -->
+            <div class="result-meta">
+                <span class="result-label">📁 Uploaded Resume:</span>
+                <span class="result-filename">{{ filename }}</span>
+                {% if candidate_id %}
+                    <span class="result-id"> | 🆔 Saved Candidate ID: #{{ candidate_id }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Candidate Profile Overview -->
+            <div class="candidate-header">
+                <div class="candidate-avatar">👤</div>
+                <div class="candidate-info">
+                    <h2 class="candidate-name">{{ parsed_data.name }}</h2>
+                    <div class="candidate-contact">
+                        <span class="contact-item">📧 <strong>Email:</strong> {{ parsed_data.email }}</span>
+                        <span class="contact-item">📞 <strong>Phone:</strong> {{ parsed_data.phone }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Extracted Skills Section -->
+            <section class="parsed-section">
+                <h3>🛠️ Identified Skills</h3>
+                <div class="skills-container">
+                    {% for skill in parsed_data.skills %}
+                        <span class="skill-badge">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Education Section -->
+            <section class="parsed-section">
+                <h3>🎓 Education Details</h3>
+                <ul class="parsed-list">
+                    {% for item in parsed_data.education %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <!-- Work Experience Section -->
+            <section class="parsed-section">
+                <h3>💼 Work Experience & Projects</h3>
+                <ul class="parsed-list">
+                    {% for item in parsed_data.experience %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <hr class="divider">
+
+            <!-- Raw Extracted Text Section (Stage 3 preservation) -->
+            <details class="raw-text-details">
+                <summary class="raw-text-summary">🔍 View Full Raw Extracted Text (PDFPlumber)</summary>
+                <div class="text-box-wrapper">
+                    <pre class="extracted-text-box">{{ extracted_text }}</pre>
+                </div>
+            </details>
+
+            <!-- Stage note -->
+            <div class="info-note">
+                ✅ <strong>Stage 5 complete:</strong> Candidate profile parsed with spaCy and saved permanently in PostgreSQL!
+            </div>
+
+            <!-- Back button -->
+            <a href="/" class="btn-back">← Upload Another Resume</a>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Automated Resume Parser &mdash; Internship Project 2026</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

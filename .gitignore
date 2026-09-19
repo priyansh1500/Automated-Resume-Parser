@@ -1,0 +1,30 @@
+﻿# .gitignore — Automated Resume Parser
+# Excludes private credentials, virtual environments, bytecode, and uploaded files from Git
+
+# 1. Private environment variables file
+.env
+.env.*
+
+# 2. Virtual Environment
+venv/
+ENV/
+env/
+
+# 3. Python Bytecode & Cache
+__pycache__/
+*.pyc
+*.py[cod]
+*$py.class
+
+# 4. Uploaded candidate files (only .gitkeep is kept so empty uploads/ folder exists)
+uploads/*
+!uploads/.gitkeep
+uploads/*.pdf
+
+# 5. Local databases & IDE settings
+*.db
+*.sqlite3
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
